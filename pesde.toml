@@ -4,7 +4,7 @@ description = "crunchyroll (ffrostfall/crunchyroll, but i forked it and it will 
 authors = ["teakzc"]
 repository = "https://github.com/teakzc/crunchywrapper"
 license = "MIT"
-includes = ["pesde.toml", "README.md", "LICENSE", "src/**/*.luau", "selene.toml", "rokit.toml"]
+includes = ["pesde.toml", "README.md", "LICENSE", "src/**/*.luau"]
 
 [target]
 environment = "roblox"
