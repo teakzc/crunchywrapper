@@ -40,17 +40,16 @@ local R6Rig = crunchyroll.create_rig({
 })
 
 local function ExpLerp(a: number, b: number, t: number, k: number): number
-
 	if k == 0 then -- Math limits workaround
 		return a + (b - a) * t -- return to linear.........
 	end
 
-    local Curve = 1 - math.exp(-k * t)
-    local Max = 1 - math.exp(-k)
+	local Curve = 1 - math.exp(-k * t)
+	local Max = 1 - math.exp(-k)
 
-    Curve = Curve / Max
+	Curve = Curve / Max
 
-    return a + (b - a) * Curve
+	return a + (b - a) * Curve
 end
 
 export type IncompleteAnimationTrack = {
@@ -242,7 +241,7 @@ function animation.Stepped(self: self, dT: number, UpdateMotor6: boolean?)
 		-- Configure weight
 
 		if Track.FadeIn and Track.FadeInElapsed then
-			Track.weight = ExpLerp(0, Track.OriginalWeight, Track.FadeInElapsed / Track.FadeIn, Track.ExponentCurve)
+			Track.weight = ExpLerp(0, Track.OriginalWeight, Track.FadeInElapsed / Track.FadeIn, -Track.ExponentCurve)
 			Track.FadeInElapsed += dT2
 
 			if Track.FadeInElapsed >= Track.FadeIn then --Stop
@@ -256,9 +255,10 @@ function animation.Stepped(self: self, dT: number, UpdateMotor6: boolean?)
 			local FadeAlpha = Track.FadeOut / Length
 
 			if FadeAlpha >= RemainingAlpha then --Starting!
-				Track.weight = ExpLerp(Track.OriginalWeight, 0, Track.FadeOutElapsed / Track.FadeOut, Track.ExponentCurve) --Lerp(Track.OriginalWeight, 0, Track.FadeOutElapsed / Track.FadeOut)
+				Track.weight =
+					ExpLerp(Track.OriginalWeight, 0, Track.FadeOutElapsed / Track.FadeOut, Track.ExponentCurve) --Lerp(Track.OriginalWeight, 0, Track.FadeOutElapsed / Track.FadeOut)
 				Track.FadeOutElapsed += dT2
-				
+
 				if Track.FadeOutElapsed >= Track.FadeOut then --Stop
 					Track.FadeOut = nil
 					Track.FadeOutElapsed = nil
