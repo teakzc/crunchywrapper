@@ -1,13 +1,13 @@
 <div align="center">
-    <img src="https://raw.githubusercontent.com/teakzc/crwrapper/refs/heads/main/assets/crwarpper.svg" alt="Helium Logo" width="256" height="256"/>
+  <img src="https://raw.githubusercontent.com/teakzc/crwrapper/refs/heads/main/assets/crwarpper.svg" alt="Logo" width="256" height="256"/>
 
-    <h1 align="center"><b>helium</b></h1>
-    <p align="center"></p>
+  <h1 align="center"><b>crunchywrapper</b></h1>
+  <p align="center"></p>
   
-    This is a ffrostfall/crunchyroll wrapper, that uses a forked version of crunchyroll.
+  This is a ffrostfall/crunchyroll wrapper, that uses a forked version of crunchyroll.
 
-    [![License](https://img.shields.io/github/license/teakzc/crunchywrapper?style=for-the-badge)](https://github.com/teakzc/crunchywrapper/blob/main/LICENSE)
-    [![Documentation](https://img.shields.io/badge/Documentation-Website-blue?style=for-the-badge)](https://teakzc.github.io/crunchywrapper/)
+  [![License](https://img.shields.io/github/license/teakzc/crunchywrapper?style=for-the-badge)](https://github.com/teakzc/crunchywrapper/blob/main/LICENSE)
+  [![Documentation](https://img.shields.io/badge/Documentation-Website-blue?style=for-the-badge)](https://teakzc.github.io/crunchywrapper/)
 </div>
 
 # crunchywrapper
