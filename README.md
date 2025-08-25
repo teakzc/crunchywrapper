@@ -46,8 +46,54 @@ export type selfprops = {
 		},
 	},
 }
+
+export type CustomData = {
+	Looped: boolean,
+	ExponentCurve: number,
+	End: boolean?,
+	Speed: number?,
+	FadeIn: number?,
+	FadeOut: number?,
+	FadeInElapsed: number?,
+	FadeOutElapsed: number?,
+	FadeOutForce: number?,
+	OriginalWeight: number?,
+}
 ```
 
 ## `new(Character: Model, Rig: crunchyroll.Rig): self`
 
 Creates a animation class, where you can play tracks and update the character's motor6d
+
+## `AddTrack(self: self, Directory: string, TrackName: string, Data: AnimationData, Fade: number?, FadeOut: number?)`
+
+AddTrack takes in the animation class of a player you want to use. Crunchywrapper takes all KeyframeSequences stored inside of folders within RpS.Assets.Animations and stores them in the animation class. AddTrack can access those KeyframeSequences (crunchyroll.Identity) and play them using animationdata and fadein or fadeout times (at the end).
+
+Example:
+```luau
+animation:AddTrack("Global", "Sprinting", {
+    Looped = true,
+    weight = 3,
+    priority = 1,
+    alpha = 0,
+    ExponentCurve = 3
+}, .25)
+```
+
+Loop loops the track, and exponentcurve determines the fade in fade out curve.
+
+## `RemoveTrack(self: self, Directory: string, TrackName: string, Fade: number?)`
+
+Remove track will set will calculate if there is remaining time left for the fade time, if there is enough the track will fade using the exponent curve defined with :AddTrack(). If there isn't enough time then it will use the remaining lifespan of the animationtrack to fade out.
+
+## `ForceRemoveTrack(self: self, Directory: string, TrackName: string)`
+
+Forcefully sets the track to nil, removing it like it never existed.
+
+## `UpdateMotor(self: self)`
+
+Updates the player's motor6d to match the animation from crunchyroll.
+
+## `Stepped(self: self, dT: number, UpdateMotor6: boolean?)`
+
+Stepped updates the crunchyroll frame and calculates.

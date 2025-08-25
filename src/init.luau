@@ -184,27 +184,25 @@ end
 --[=[
 	Note that removing a track with a fade out time will only work if there is remaning track or if the track is looped.
 ]=]
-function animation.RemoveTrack(self: self, Directory: string, TrackName: string, Fade: number?)
+function animation.RemoveTrack(self: self, Directory: string, TrackName: string, Fade: number)
 	assert(self.Animations[self.AnimationTracks[Directory][TrackName]], "Animation is not playing!")
 
 	local Track = self.Animations[self.AnimationTracks[Directory][TrackName]]
+	
+	local LengthS = self.AnimationTracks[Directory][TrackName].length --Length Seconds
 
-	if Fade then
-		local LengthS = self.AnimationTracks[Directory][TrackName].length --Length Seconds
+	local FadeAlpha = Fade / LengthS -- Fade sec over length sec is fade alpha
+	local RemainingAlpha = 1 - Track.alpha
 
-		local FadeAlpha = Fade / LengthS -- Fade sec over length sec is fade alpha
-		local RemainingAlpha = 1 - Track.alpha
-
-		if RemainingAlpha <= FadeAlpha then -- There is enough time
-			Track.FadeOut = Fade
-		else
-			Track.FadeOut = LengthS - (LengthS * Track.alpha)
-		end
-
-		Track.End = true
-		Track.FadeOutElapsed = 0
-		Track.weight = Track.OriginalWeight
+	if RemainingAlpha <= FadeAlpha then -- There is enough time
+		Track.FadeOut = Fade
+	else
+		Track.FadeOut = LengthS - (LengthS * Track.alpha)
 	end
+
+	Track.End = true
+	Track.FadeOutElapsed = 0
+	Track.weight = Track.OriginalWeight
 end
 
 function animation.ForceRemoveTrack(self: self, Directory: string, TrackName: string)
