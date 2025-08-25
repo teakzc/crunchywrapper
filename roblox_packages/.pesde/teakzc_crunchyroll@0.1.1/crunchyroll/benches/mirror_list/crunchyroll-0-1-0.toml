@@ -1,0 +1,4 @@
+name = "crunchyroll_0_1_0"
+remote = "https://github.com/ffrostfall/crunchyroll.git"
+branch = "0.1.0"
+revision = "3228130fbe40c9c760540a1e681e3f5c187a00b0"
