@@ -185,24 +185,24 @@ end
 	Note that removing a track with a fade out time will only work if there is remaning track or if the track is looped.
 ]=]
 function animation.RemoveTrack(self: self, Directory: string, TrackName: string, Fade: number)
-	assert(self.Animations[self.AnimationTracks[Directory][TrackName]], "Animation is not playing!")
+	if self.Animations[self.AnimationTracks[Directory][TrackName]] then
+		local Track = self.Animations[self.AnimationTracks[Directory][TrackName]]
+		
+		local LengthS = self.AnimationTracks[Directory][TrackName].length --Length Seconds
 
-	local Track = self.Animations[self.AnimationTracks[Directory][TrackName]]
-	
-	local LengthS = self.AnimationTracks[Directory][TrackName].length --Length Seconds
+		local FadeAlpha = Fade / LengthS -- Fade sec over length sec is fade alpha
+		local RemainingAlpha = 1 - Track.alpha
 
-	local FadeAlpha = Fade / LengthS -- Fade sec over length sec is fade alpha
-	local RemainingAlpha = 1 - Track.alpha
+		if RemainingAlpha <= FadeAlpha then -- There is enough time
+			Track.FadeOut = Fade
+		else
+			Track.FadeOut = LengthS - (LengthS * Track.alpha)
+		end
 
-	if RemainingAlpha <= FadeAlpha then -- There is enough time
-		Track.FadeOut = Fade
-	else
-		Track.FadeOut = LengthS - (LengthS * Track.alpha)
+		Track.End = true
+		Track.FadeOutElapsed = 0
+		Track.weight = Track.OriginalWeight
 	end
-
-	Track.End = true
-	Track.FadeOutElapsed = 0
-	Track.weight = Track.OriginalWeight
 end
 
 function animation.ForceRemoveTrack(self: self, Directory: string, TrackName: string)
@@ -267,8 +267,6 @@ function animation.Stepped(self: self, dT: number, UpdateMotor6: boolean?)
 		elseif Track.FadeOut ~= nil and Track.FadeOutElapsed ~= nil and Track.End == true then --force ended
 			Track.weight = ExpLerp(Track.OriginalWeight, 0, Track.FadeOutElapsed / Track.FadeOut, Track.ExponentCurve) --Lerp(Track.OriginalWeight, 0, Track.FadeOutElapsed / Track.FadeOut)
 			Track.FadeOutElapsed += dT2
-
-			print(Track.weight)
 
 			if Track.FadeOutElapsed >= Track.FadeOut then --Stop
 				Track.FadeOut = nil
