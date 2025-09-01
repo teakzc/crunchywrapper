@@ -206,7 +206,9 @@ function animation.RemoveTrack(self: self, Directory: string, TrackName: string,
 end
 
 function animation.ForceRemoveTrack(self: self, Directory: string, TrackName: string)
-	self.Animations[self.AnimationTracks[Directory][TrackName]] = nil
+	if self.Animations[self.AnimationTracks[Directory][TrackName]] then
+		self.Animations[self.AnimationTracks[Directory][TrackName]] = nil
+	end
 end
 
 function animation.UpdateMotor(self: self)
