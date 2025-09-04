@@ -1,6 +1,6 @@
+--!optimize 2
+--!native
 --!strict
-
-local RpS = game:GetService("ReplicatedStorage")
 
 local crunchyroll = require("./roblox_packages/crunchyroll")
 
@@ -87,11 +87,6 @@ export type selfprops = {
 	Animations: { [crunchyroll.AnimationAsset]: CompleteAnimationData },
 	Rig: crunchyroll.Rig,
 	Motor6D: { [string]: Motor6D },
-	AnimationTracks: {
-		[string]: {
-			[string]: crunchyroll.AnimationAsset,
-		},
-	},
 }
 
 local animation = {}
@@ -115,20 +110,9 @@ function animation.new(Character: Model, Rig: crunchyroll.Rig): self
 			Animations = {},
 			Rig = Rig,
 			Motor6D = {},
-			AnimationTracks = {},
 		} :: selfprops,
 		animation
 	)
-
-	for _, Folder: Folder in RpS.Assets.Animations:GetChildren() do
-		self.AnimationTracks[Folder.Name] = {}
-
-		for _, Animation in Folder:GetChildren() do
-			if Animation:IsA("KeyframeSequence") then
-				self.AnimationTracks[Folder.Name][Animation.Name] = crunchyroll.load_keyframe_sequence(Animation, Rig)
-			end
-		end
-	end
 
 	local Torso = Character:FindFirstChild("Torso")
 	local HRP = Character:FindFirstChild("HumanoidRootPart")
@@ -152,20 +136,17 @@ export type self = typeof(animation.new(Instance.new("Model"), R6Rig))
 
 function animation.AddTrack(
 	self: self,
-	Directory: string,
-	TrackName: string,
+	AnimationAsset: crunchyroll.AnimationAsset,
 	Data: AnimationData,
 	Fade: number?,
 	FadeOut: number?
 )
-	assert(self.AnimationTracks[Directory][TrackName], "Animation does not exist!")
-
 	Data.start_fade_time = 0
 	Data.stop_fade_time = 0
 	Data.OriginalWeight = Data.weight
 	Data.End = nil
 
-	if self.Animations[self.AnimationTracks[Directory][TrackName]] == nil then
+	if self.Animations[AnimationAsset] == nil then
 		if Fade then
 			Data.FadeIn = Fade
 			Data.FadeInElapsed = 0
@@ -177,18 +158,18 @@ function animation.AddTrack(
 			Data.FadeOutElapsed = 0
 		end
 
-		self.Animations[self.AnimationTracks[Directory][TrackName]] = Data :: CompleteAnimationData
+		self.Animations[AnimationAsset] = Data :: CompleteAnimationData
 	end
 end
 
 --[=[
 	Note that removing a track with a fade out time will only work if there is remaning track or if the track is looped.
 ]=]
-function animation.RemoveTrack(self: self, Directory: string, TrackName: string, Fade: number)
-	if self.Animations[self.AnimationTracks[Directory][TrackName]] then
-		local Track = self.Animations[self.AnimationTracks[Directory][TrackName]]
-		
-		local LengthS = self.AnimationTracks[Directory][TrackName].length --Length Seconds
+function animation.RemoveTrack(self: self, AnimationAsset: crunchyroll.AnimationAsset, Fade: number)
+	if self.Animations[AnimationAsset] then
+		local Track = self.Animations[AnimationAsset]
+
+		local LengthS = AnimationAsset.length --Length Seconds
 
 		local FadeAlpha = Fade / LengthS -- Fade sec over length sec is fade alpha
 		local RemainingAlpha = 1 - Track.alpha
@@ -205,9 +186,9 @@ function animation.RemoveTrack(self: self, Directory: string, TrackName: string,
 	end
 end
 
-function animation.ForceRemoveTrack(self: self, Directory: string, TrackName: string)
-	if self.Animations[self.AnimationTracks[Directory][TrackName]] then
-		self.Animations[self.AnimationTracks[Directory][TrackName]] = nil
+function animation.ForceRemoveTrack(self: self, AnimationAsset: crunchyroll.AnimationAsset)
+	if self.Animations[AnimationAsset] then
+		self.Animations[AnimationAsset] = nil
 	end
 end
 

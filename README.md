@@ -72,13 +72,13 @@ Fade in and Fade out **requires** a `IDLE TRACK` or else it won't work! (It uses
 
 Creates a animation class, where you can play tracks and update the character's motor6d. It is recommended to create new rigs for every time you do this.
 
-## `AddTrack(self: self, Directory: string, TrackName: string, Data: AnimationData, Fade: number?, FadeOut: number?)`
+## `AddTrack(self: self, AnimationAsset: crunchyroll.AnimationAsset, Data: AnimationData, Fade: number?, FadeOut: number?)`
 
-AddTrack takes in the animation class of a player you want to use. Crunchywrapper takes all KeyframeSequences stored inside of folders within RpS.Assets.Animations and stores them in the animation class. AddTrack can access those KeyframeSequences (crunchyroll.Identity) and play them using animationdata and fadein or fadeout times (at the end).
+AddTrack takes in the animation class of a player you want to use. You have to give the function a ``crunchyroll.AnimationAsset`` which is just ``crunchyroll.load_keyframe_sequence(keyframe_sequence, rig)`` using the same rig for ``animation.new``
 
 Example:
 ```luau
-animation:AddTrack("Global", "Sprinting", {
+animation:AddTrack(MyVeryAmazingAnimationAsset, {
     Looped = true,
     weight = 3,
     priority = 1,
@@ -91,11 +91,11 @@ Loop loops the track, and exponentcurve determines the fade in fade out curve.
 
 This graph is for how [ExponentCurve](https://www.desmos.com/calculator/8uyqm1rnrt) changes weight
 
-## `RemoveTrack(self: self, Directory: string, TrackName: string, Fade: number?)`
+## `RemoveTrack(self: self, AnimationAsset: crunchyroll.AnimationAsset, Fade: number?)`
 
 Remove track will set will calculate if there is remaining time left for the fade time, if there is enough the track will fade using the exponent curve defined with :AddTrack(). If there isn't enough time then it will use the remaining lifespan of the animationtrack to fade out.
 
-## `ForceRemoveTrack(self: self, Directory: string, TrackName: string)`
+## `ForceRemoveTrack(self: self, AnimationAsset: crunchyroll.AnimationAsset)`
 
 Forcefully sets the track to nil, removing it like it never existed.
 
