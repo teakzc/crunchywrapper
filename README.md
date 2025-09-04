@@ -64,9 +64,13 @@ export type CustomData = {
 }
 ```
 
+## ⚠️ FADE IN AND FADE OUT
+
+Fade in and Fade out **requires** a `IDLE TRACK` or else it won't work! (It uses weight to fade so it needs another track)
+
 ## `new(Character: Model, Rig: crunchyroll.Rig): self`
 
-Creates a animation class, where you can play tracks and update the character's motor6d
+Creates a animation class, where you can play tracks and update the character's motor6d. It is recommended to create new rigs for every time you do this.
 
 ## `AddTrack(self: self, Directory: string, TrackName: string, Data: AnimationData, Fade: number?, FadeOut: number?)`
 
@@ -80,10 +84,12 @@ animation:AddTrack("Global", "Sprinting", {
     priority = 1,
     alpha = 0,
     ExponentCurve = 3
-}, .25)
+}, .25) --Fade in time included, make sure you have an idle track too
 ```
 
 Loop loops the track, and exponentcurve determines the fade in fade out curve.
+
+This graph is for how [ExponentCurve](https://www.desmos.com/calculator/8uyqm1rnrt) changes weight
 
 ## `RemoveTrack(self: self, Directory: string, TrackName: string, Fade: number?)`
 
@@ -100,3 +106,5 @@ Updates the player's motor6d to match the animation from crunchyroll.
 ## `Stepped(self: self, dT: number, UpdateMotor6: boolean?)`
 
 Stepped updates the crunchyroll frame and calculates.
+
+It is recommended to use `RunService.PreSimulation` for this
